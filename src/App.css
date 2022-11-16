@@ -1,0 +1,98 @@
+.App {
+  text-align: center;
+  /* background: #E5E5E5; */
+}
+
+.banner {
+  max-height: 70vh;
+  min-height: 70vh;
+}
+
+.title {
+  /* padding-left: 100px; */
+  font-family: "avenir";
+  color: #FFFFFF;
+}
+.jumbotron-title {
+  font-size: 60px;
+  font-weight: 800;
+  font-style: normal;
+  line-height: 71.81px;
+  letter-spacing: -3%;
+}
+.jumbotron-subtitle {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+}
+
+.heading-journey {
+  font-family: "avenir";
+  font-weight: 900;
+  font-size: 45px;
+  line-height: 66px;
+  color: #000000;
+}
+
+.profile-title {
+  font-family: "avenir";
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 33px;
+  color: #000000;
+}
+.profile-subtitle {
+  font-family: "avenir";
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.input-button {
+  border: none;
+  border-radius: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: #FFFFFF;
+}
+.input-button:hover {
+  background-color: greenyellow;
+}
+/* .App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
