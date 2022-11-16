@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 export const API = axios.create({
-    baseURL: 'http://localhost:5000/api/v1/' //base url from backend localhost
+    // for using localhost
+    // baseURL: 'http://localhost:5000/api/v1/' //base url from backend localhost
+
+    // for deploy using netlify
+    baseURL: process.env.REACT_APP_BASEURL,
 })
 
 // for set auth token 
