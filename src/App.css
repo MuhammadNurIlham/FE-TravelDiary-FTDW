@@ -62,6 +62,9 @@
 .input-button:hover {
   background-color: greenyellow;
 }
+.text-desc {
+  text-align: justify;
+}
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;

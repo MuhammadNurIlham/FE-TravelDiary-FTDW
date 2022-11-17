@@ -8,7 +8,7 @@ function Profile() {
         <div>
             <NavbarAfterLogin />
             <ProfileComponent />
-            <CardJourney />
+            {/* <CardJourney /> */}
         </div>
     )
 }

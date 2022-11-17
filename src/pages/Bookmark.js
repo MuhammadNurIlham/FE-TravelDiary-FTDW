@@ -11,6 +11,7 @@ import { FaBookmark } from "react-icons/fa"
 import { FaRegBookmark } from "react-icons/fa"
 import { FaHeart } from "react-icons/fa"
 import { FaRegHeart } from "react-icons/fa"
+import Blank from '../atoms/Blank';
 
 function Bookmark() {
     const [state] = useContext(UserContext);
@@ -76,84 +77,94 @@ function Bookmark() {
             <NavbarAfterLogin />
             <div className='container'>
                 <h2 className='text-start py-4 heading-journey'>Bookmark</h2>
-                <div className="row row-cols-1 row-cols-md-4 g-4">
-                    {bookmarks?.map((bookmark, index) => {
-                        return (
-                            <div className="col pt-4" key={index}>
-                                <div className="card h-100">
-                                    <img src={"http://localhost:5000/uploads/" + bookmark?.journey.image}
-                                        className="card-img-top"
-                                        alt="..."
-                                        style={{
-                                            maxHeight: "50%",
-                                            minHeight: "50%",
-                                            objectFit: "cover",
-                                        }} />
-                                    <div className="card-body">
-                                        {isLogin ? (
-                                            <div className='d-flex pb-3 ms-auto'>
-                                                {/* <span className='pe-1'><FaRegHeart /></span> */}
-                                                <p className="card-text fw-bold">{bookmark.journey.user.name}</p>
-                                                <span className='pe-1 ms-auto cursor-pointer' onClick={(e) => {
-                                                    Swal.fire({
-                                                        title: 'Do you want to delete this journey from bookmark?',
-                                                        showDenyButton: true,
-                                                        confirmButtonText: 'Delete',
-                                                        denyButtonText: `Cancel`,
-                                                    }).then((result) => {
-                                                        /* Read more about isConfirmed, isDenied below */
-                                                        if (result.isConfirmed) {
-                                                            Swal.fire({
-                                                                icon: "success",
-                                                                title: "Delete Success!",
-                                                                showConfirmButton: true,
-                                                                onClick: handleDelete(e, bookmark.id, bookmark.journey_id),
-                                                            });
-                                                        } else if (result.isDenied) {
-                                                            Swal.fire('Journey are not delete', '', 'info')
-                                                        }
-                                                    })
-                                                }}><FaBookmark /></span>
-                                                {/* <Link to="/Bookmark">
+                {bookmarks?.length !== 0 ? (
+                    <div className="row row-cols-1 row-cols-md-4 g-4">
+                        {bookmarks?.map((bookmark, index) => {
+                            return (
+                                <div className="col pt-4" key={index}>
+                                    <div className="card h-100">
+                                        <img src={"http://localhost:5000/uploads/" + bookmark?.journey.image}
+                                            className="card-img-top"
+                                            alt="..."
+                                            style={{
+                                                maxHeight: "50%",
+                                                minHeight: "50%",
+                                                objectFit: "cover",
+                                            }} />
+                                        <div className="card-body">
+                                            {isLogin ? (
+                                                <div className='d-flex pb-3 ms-auto'>
+                                                    {/* <span className='pe-1'><FaRegHeart /></span> */}
+                                                    <p className="card-text fw-bold">{bookmark.journey.user.name}</p>
+                                                    <span className='pe-1 ms-auto cursor-pointer' onClick={(e) => {
+                                                        Swal.fire({
+                                                            title: 'Do you want to delete this journey from bookmark?',
+                                                            showDenyButton: true,
+                                                            confirmButtonText: 'Delete',
+                                                            denyButtonText: `Cancel`,
+                                                        }).then((result) => {
+                                                            /* Read more about isConfirmed, isDenied below */
+                                                            if (result.isConfirmed) {
+                                                                Swal.fire({
+                                                                    icon: "success",
+                                                                    title: "Delete Success!",
+                                                                    showConfirmButton: true,
+                                                                    onClick: handleDelete(e, bookmark.id, bookmark.journey_id),
+                                                                });
+                                                            } else if (result.isDenied) {
+                                                                Swal.fire('Journey are not delete', '', 'info')
+                                                            }
+                                                        })
+                                                    }}><FaBookmark /></span>
+                                                    {/* <Link to="/Bookmark">
                                         </Link> */}
-                                                {/* <span className='pe-1'><FaHeart /></span>
+                                                    {/* <span className='pe-1'><FaHeart /></span>
                                         <span><FaBookmark /></span> */}
-                                            </div>
-                                        ) : (
-                                            <div className='d-flex pb-3'>
-                                                {/* <span className='pe-1'><FaRegHeart /></span> */}
-                                                <span className='pe-1' onClick={(e) => {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Oops...',
-                                                        text: 'Anda Belum Login, Silahkan Login!',
-                                                    })
-                                                }}><FaBookmark /></span>
-                                                {/* <Link to="/Bookmark">
+                                                </div>
+                                            ) : (
+                                                <div className='d-flex pb-3'>
+                                                    {/* <span className='pe-1'><FaRegHeart /></span> */}
+                                                    <span className='pe-1' onClick={(e) => {
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Oops...',
+                                                            text: 'Anda Belum Login, Silahkan Login!',
+                                                        })
+                                                    }}><FaBookmark /></span>
+                                                    {/* <Link to="/Bookmark">
                                         </Link> */}
-                                                {/* <span className='pe-1'><FaHeart /></span>
+                                                    {/* <span className='pe-1'><FaHeart /></span>
                                         <span><FaBookmark /></span> */}
-                                            </div>
-                                        )}
-                                        <h6 className="card-title cursor-pointer" onClick={() => { navigate(`/DetailJourney/${bookmark.journey.id}`) }} key={index}>{bookmark.journey.title.slice(0, 20)} ..</h6>
-                                        <p
-                                            className="text-muted"
-                                            style={{ fontSize: "12px" }}
-                                        >
-                                            {moment(bookmark.journey.created_at).format(
-                                                "dddd, DD MMMM YYYY"
+                                                </div>
                                             )}
-                                        </p>
-                                        {/* <div className='d-flex'>
-                                    </div> */}
-                                        <p className="card-text text-justify cursor-pointer" onClick={() => { navigate(`/DetailJourney/${bookmark.journey.id}`) }} key={index}>{bookmark.journey.description.slice(0, 120)} ...</p>
+                                            {/* ================================================================== */}
+                                            {/* ================================================================== */}
+                                            <h6 className="card-title cursor-pointer"
+                                                style={{ fontSize: "14px" }}
+                                                onClick={() => { navigate(`/DetailJourney/${bookmark.journey.id}`) }}
+                                                key={index}>{bookmark.journey.title.slice(0, 30)} ...</h6>
+                                            <p
+                                                className="text-muted"
+                                                style={{ fontSize: "11px" }}
+                                            >
+                                                {moment(bookmark.journey.created_at).format(
+                                                    "dddd, DD MMMM YYYY"
+                                                )}
+                                            </p>
+                                            <p className="card-text cursor-pointer pb-4"
+                                                style={{ fontSize: "12px" }}
+                                                onClick={() => { navigate(`/DetailJourney/${bookmark.journey.id}`) }}
+                                                key={index}>{bookmark.journey.description.slice(0, 40)}... <span className='fw-bold text-primary'>Read more</span></p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    }
-                    )}
-                </div>
+                            )
+                        }
+                        )}
+                    </div>
+                ) : (
+                    <Blank />
+                )}
             </div>
         </div>
     )

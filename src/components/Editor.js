@@ -4,9 +4,12 @@ import { useMutation } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import NavbarAfterLogin from './NavbarAfterLogin';
 import { API } from '../config/API';
+import Swal from "sweetalert2";
+import Loading from '../atoms/Loading';
 
 function Editor() {
     let navigate = useNavigate();
+    // const [isLoading, setIsLoading] = useState(false);
     const [journeys, setJourneys] = useState([]);
     const [preview, setPreview] = useState(null); // set for image preview
     const [form, setForm] = useState({
@@ -53,10 +56,22 @@ function Editor() {
                     Authorization: `Bearer ${localStorage.token}`
                 },
             });
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                showConfirmButton: false,
+                timer: 2000,
+            });
+            // setIsLoading(true)
             navigate('/Home')
             // navigate(`journey/${id}`)
             console.log("ini response add journey", response);
         } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops failed to add journey',
+                text: 'Please check your internet connection',
+            })
             console.log("ini response error add journey", error);
         }
     });
@@ -97,7 +112,7 @@ function Editor() {
                         <div className='col'>
                             <div className="input-group mb-3">
                                 <input type="file" name='image' className="form-control" id="inputGroupFile02" onChange={handleOnChange} />
-                                <label className="input-group-text" for="inputGroupFile02">Upload</label>
+                                {/* <label className="input-group-text" for="inputGroupFile02">Upload</label> */}
                             </div>
                         </div>
                     </div>
@@ -116,15 +131,13 @@ function Editor() {
                         </div>
                     </div>
                     <div className="d-grid gap-2 d-md-flex justify-content-md-end py-3">
-                        <button className="btn btn-primary btn-edit py-3 fs-5" type="submit">
+                        <button className="btn btn-primary btn-edit py-1 fs-5" type="submit">
                             Add Journey
                         </button>
-                        {/* <Link to="/UserMenus" className="link">
-                    </Link> */}
                     </div>
                 </Form>
             </div >
-        </div>
+        </div >
     )
 }
 

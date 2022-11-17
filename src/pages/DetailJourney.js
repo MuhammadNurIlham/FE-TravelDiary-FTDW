@@ -11,8 +11,8 @@ function DetailJourney() {
         const response = await API.get('/journey/' + id);
         return response.data.data;
     });
-    console.log(journey);
-    console.log(id);
+    // console.log(journey);
+    // console.log(id);
 
 
     return (
@@ -26,7 +26,7 @@ function DetailJourney() {
                                 <h2>{journey?.title}</h2>
                             </div>
                             <div className="ms-auto align-items-center">
-                                <p className='fw-bold'>{journey?.user?.name}</p>
+                                <p className='fw-bold'>Author: <br></br> {journey?.user?.name}</p>
                             </div>
                         </div>
                     </div>
@@ -40,8 +40,8 @@ function DetailJourney() {
                 </div>
                 <div className='row'>
                     <img src={journey?.image} className="img-fluid" alt="yolooo" />
-                    <div className='d-flex align-items-start py-5'>
-                        <p className='text-start'>{journey?.description.slice(0, 1000)}</p>
+                    <div className='d-flex py-5'>
+                        <p className='text-desc'>{journey?.description}</p>
                     </div>
                 </div>
             </div>
