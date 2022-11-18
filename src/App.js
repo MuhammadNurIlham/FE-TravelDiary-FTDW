@@ -16,6 +16,7 @@ import Bookmark from "./pages/Bookmark";
 import Home from "./pages/Home";
 import PrivateRoute from "./pages/PrivateRoute";
 import Loading from "./atoms/Loading";
+import EditJourney from "./pages/EditJourney";
 // import NavbarAfterLogin from "./components/NavbarAfterLogin";
 // import NavigationBar from "./components/Navbar";
 
@@ -81,6 +82,7 @@ function App() {
               {/* <Route exact path="/DetailJourney" element={<DetailJourney />} /> */}
               <Route exact path="/Bookmark" element={<Bookmark />} />
               <Route exact path="/Editor" element={<Editor />} />
+              <Route exact path="/EditJourney/:id" element={<EditJourney />} />
             </Route>
           </Routes>
         )}

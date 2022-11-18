@@ -1,84 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { Form } from 'react-bootstrap';
-import { useMutation } from 'react-query';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import NavbarAfterLogin from './NavbarAfterLogin';
 import { API } from '../config/API';
-import Swal from "sweetalert2";
-import Loading from '../atoms/Loading';
+import { Form } from 'react-bootstrap';
+import NavbarAfterLogin from '../components/NavbarAfterLogin';
 
-function Editor() {
+
+function EditJourney() {
+    const { id } = useParams();
     let navigate = useNavigate();
-    // const [isLoading, setIsLoading] = useState(false);
-    const [journeys, setJourneys] = useState([]);
-    const [preview, setPreview] = useState(null); // set for image preview
+
+    const [journeyId, setJourneyId] = useState([]);
+    const [preview, setPreview] = useState([]);
     const [form, setForm] = useState({
         image: "",
         title: "",
         description: "",
     });
 
-    const getJourneys = async () => {
-        try {
-            const response = await API.get('/journeys');
-            setJourneys(response.data.data);
-        } catch (error) {
-            console.log('ini error get journey', error)
-        }
-    };
+    let { data: journey, refetch: refetchYuk } = useQuery(["editJourneyCache"], async () => {
+        const response = await API.get('/journey' + id);
+        return response.data.data
+    });
 
-    const handleOnChange = (e) => {
+    useEffect(() => {
+        if (journey) {
+            setPreview(journey.image);
+            setForm({
+                ...form,
+                title: journey.title,
+                description: journey.description,
+            });
+        }
+        refetchYuk();
+    }, [journey])
+
+    const handleOnChange = async (e) => {
         setForm({
-            ...form,
             [e.target.name]:
                 e.target.type === "file" ? e.target.files : e.target.value,
         });
 
-        //create image preview
         if (e.target.type === "file") {
             let url = URL.createObjectURL(e.target.files[0]);
             setPreview(url);
         }
     };
 
-    // const {id} = useParams();
-    const handleOnSubmit = useMutation(async (e) => {
+    const handleOnSubmit = async (e) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
-
-            const formData = new FormData();
-            formData.set("image", form.image[0], form.image[0].name);
+            const formData = new formData();
+            if (form.image) {
+                formData.set("image", form?.image[0], form?.image[0]?.name);
+            }
             formData.set("title", form.title);
-            formData.set("description", form.description);
+            formData.set("description", form.description)
 
-            const response = await API.post('/journey', formData, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.token}`
-                },
-            });
-            Swal.fire({
-                icon: "success",
-                title: "Success!",
-                showConfirmButton: false,
-                timer: 1500,
-            });
-            // setIsLoading(true)
-            navigate('/Home')
-            // navigate(`journey/${id}`)
-            console.log("ini response add journey", response);
+            const response = await API.patch('/journey/' + journey.id, formData);
+            console.log("this response update journey", response);
+
+            refetchYuk();
+            navigate('/Profile')
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops failed to add journey',
-                text: 'Please check your internet connection',
-            })
-            console.log("ini response error add journey", error);
+            console.log(error)
         }
-    });
-
-    useEffect(() => {
-        getJourneys();
-    }, []);
+    };
 
 
     return (
@@ -86,7 +73,7 @@ function Editor() {
             <NavbarAfterLogin />
             <div className='container py-5'>
                 <div>
-                    <h3 className='title py-3 text-dark'>Add Journey</h3>
+                    <h3 className='title py-3 text-dark'>Edit Journey</h3>
                 </div>
                 <Form onSubmit={(e) => handleOnSubmit.mutate(e)}>
                     {preview && (
@@ -105,13 +92,26 @@ function Editor() {
                     )}
                     <div className='row'>
                         <div className='col mb-3'>
-                            <input type="text" className="form-control px-2 py-3" id="exampleFormControlInput1" placeholder="Title" name='title' onChange={handleOnChange}></input>
+                            <input
+                                className="form-control px-2 py-3"
+                                id="exampleFormControlInput1"
+                                type="text"
+                                placeholder="Title"
+                                name='title'
+                                value={form?.title}
+                                onChange={handleOnChange}>
+                            </input>
                         </div>
                     </div>
                     <div className='row'>
                         <div className='col'>
                             <div className="input-group mb-3">
-                                <input type="file" name='image' className="form-control" id="inputGroupFile02" onChange={handleOnChange} />
+                                <input
+                                    className="form-control"
+                                    id="inputGroupFile02"
+                                    type="file"
+                                    name='image'
+                                    onChange={handleOnChange} />
                                 {/* <label className="input-group-text" for="inputGroupFile02">Upload</label> */}
                             </div>
                         </div>
@@ -119,11 +119,12 @@ function Editor() {
                     <div className='row'>
                         <div className='col mb-3'>
                             <textarea
-                                type="textarea"
                                 className="form-control px-2 py-3"
                                 id="exampleFormControlInput1"
                                 placeholder="Description"
+                                type="textarea"
                                 name='description'
+                                value={form?.description}
                                 onChange={handleOnChange}
                                 style={{
                                     height: "200px"
@@ -132,7 +133,7 @@ function Editor() {
                     </div>
                     <div className="d-grid gap-2 d-md-flex justify-content-md-end py-3">
                         <button className="btn btn-primary btn-edit py-1 fs-5" type="submit">
-                            Add Journey
+                            Update Journey
                         </button>
                     </div>
                 </Form>
@@ -141,4 +142,4 @@ function Editor() {
     )
 }
 
-export default Editor
+export default EditJourney;

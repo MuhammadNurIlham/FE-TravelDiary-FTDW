@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { UserContext } from '../context/UserContext';
 import { API } from '../config/API';
@@ -10,12 +11,13 @@ import { FaRegHeart } from "react-icons/fa"
 import { FaHeart } from "react-icons/fa"
 import { FaTrashAlt } from "react-icons/fa"
 import { FaRegEdit } from "react-icons/fa"
+import Blank from '../atoms/Blank';
 
 
 import julian from '../assets/julian.jpg';
-import { useNavigate } from 'react-router-dom';
 
 function ProfileComponent() {
+    const { id } = useParams()
     let navigate = useNavigate();
     const [state, dispatch] = useContext(UserContext);
     let { data: journeyProfile, refetch } = useQuery("journeyProfileCache", async () => {
@@ -65,15 +67,20 @@ function ProfileComponent() {
     };
 
     // ===== handle edit journey ====== \\
-    const handleEdit = async (e, journeyID) => {
-        e.preventDefault();
-        try {
-            const responseEdit = await API.patch('/journey/' + journeyID)
-            console.log("ini response edit ygy", responseEdit)
-            refetch();
-        } catch (error) {
-            console.log(error)
-        }
+    // const handleEdit = async (e, journeyID) => {
+    //     e.preventDefault();
+    //     try {
+    //         const responseEdit = await API.patch('/journey/' + journeyID)
+    //         console.log("ini response edit ygy", responseEdit)
+    //         refetch();
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const handleEditJourney = (e, journeyID) => {
+        navigate('/EditJourney/' + journeyID)
+        // navigate(`/DetailJourney/${journey?.id}`)
     }
 
     // ===== handle delete journey ===== \\
@@ -111,138 +118,180 @@ function ProfileComponent() {
                 <hr></hr>
             </div>
             <hr></hr>
-            <div className="row row-cols-1 row-cols-md-4 g-4">
-                {journeyProfile?.map((journey, index) => (
-                    <div className="col pt-4" key={index}>
-                        <div className="card h-100">
-                            <img
-                                src={journey?.image}
-                                className="card-img-top"
-                                alt="..."
-                                style={{
-                                    maxHeight: "50%",
-                                    minHeight: "50%",
-                                    objectFit: "cover",
-                                }}
-                            />
-                            <div className="card-body">
-                                {/* ==== isLogin for bookmark ==== */}
-                                <div className='d-flex pb-3'>
-                                    <p className="card-text me-auto fw-bold">{journey.user.name}</p>
-                                    {/* <span className='pe-1'><FaRegHeart /></span> */}
-                                    {journey.books == "true" ? (
-                                        <div>
-                                            <span className='pe-1 ms-auto cursor-pointer'><FaRegEdit /></span>
-                                            <span className='pe-1 cursor-pointer' onClick={(e) => {
-                                                Swal.fire({
-                                                    title: 'Are you sure you want to delete this journey?',
-                                                    showDenyButton: true,
-                                                    confirmButtonText: 'Delete',
-                                                    denyButtonText: `Cancel`,
-                                                }).then((result) => {
-                                                    /* Read more about isConfirmed, isDenied below */
-                                                    if (result.isConfirmed) {
-                                                        Swal.fire({
-                                                            icon: "success",
-                                                            title: "Success!",
-                                                            showConfirmButton: true,
-                                                            onClick: handleDeleteJourney(e, journey.id),
-                                                        });
-                                                    } else if (result.isDenied) {
-                                                        Swal.fire('Journey doesnt get deleted', '', 'info')
-                                                    }
-                                                })
-                                            }}><FaTrashAlt /></span>
-                                            <span className='pe-1 cursor-pointer' onClick={(e) => {
-                                                Swal.fire({
-                                                    title: 'Do you want to unbookmark this journey?',
-                                                    showDenyButton: true,
-                                                    confirmButtonText: 'Save',
-                                                    denyButtonText: `Don't save`,
-                                                }).then((result) => {
-                                                    /* Read more about isConfirmed, isDenied below */
-                                                    if (result.isConfirmed) {
-                                                        Swal.fire({
-                                                            icon: "success",
-                                                            title: "Success!",
-                                                            showConfirmButton: true,
-                                                            onClick: handleDelete(e, journey.id),
-                                                        });
-                                                    } else if (result.isDenied) {
-                                                        Swal.fire('Journey are not saved', '', 'info')
-                                                    }
-                                                })
-                                            }}><FaBookmark /></span>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <span className='pe-1 ms-auto cursor-pointer'><FaRegEdit /></span>
-                                            <span className='pe-1 cursor-pointer' onClick={(e) => {
-                                                Swal.fire({
-                                                    title: 'Are you sure you want to delete this journey?',
-                                                    showDenyButton: true,
-                                                    confirmButtonText: 'Delete',
-                                                    denyButtonText: `Cancel`,
-                                                }).then((result) => {
-                                                    /* Read more about isConfirmed, isDenied below */
-                                                    if (result.isConfirmed) {
-                                                        Swal.fire({
-                                                            icon: "success",
-                                                            title: "Success!",
-                                                            showConfirmButton: true,
-                                                            onClick: handleDeleteJourney(e, journey.id),
-                                                        });
-                                                    } else if (result.isDenied) {
-                                                        Swal.fire('Journey doesnt get deleted', '', 'info')
-                                                    }
-                                                })
-                                            }}><FaTrashAlt /></span>
-                                            <span className='pe-1 cursor-pointer' onClick={(e) => {
-                                                Swal.fire({
-                                                    title: 'Do you want to save this journey?',
-                                                    showDenyButton: true,
-                                                    confirmButtonText: 'Save',
-                                                    denyButtonText: `Don't save`,
-                                                }).then((result) => {
-                                                    /* Read more about isConfirmed, isDenied below */
-                                                    if (result.isConfirmed) {
-                                                        Swal.fire({
-                                                            icon: "success",
-                                                            title: "Success!",
-                                                            showConfirmButton: true,
-                                                            onClick: handleOnBookmark(e, journey.id),
-                                                        });
-                                                    } else if (result.isDenied) {
-                                                        Swal.fire('Journey are not saved', '', 'info')
-                                                    }
-                                                })
-                                            }}><FaRegBookmark /></span>
-                                        </div>
-                                    )}
+            {journeyProfile?.length !== 0 ? (
+                <div className="row row-cols-1 row-cols-md-4 g-4">
+                    {journeyProfile?.map((journey, index) => (
+                        <div className="col pt-4" key={index}>
+                            <div className="card h-100">
+                                <img
+                                    src={journey?.image}
+                                    className="card-img-top"
+                                    alt="..."
+                                    style={{
+                                        maxHeight: "50%",
+                                        minHeight: "50%",
+                                        objectFit: "cover",
+                                    }}
+                                />
+                                <div className="card-body">
+                                    {/* ==== isLogin for bookmark ==== */}
+                                    <div className='d-flex pb-3'>
+                                        <p className="card-text me-auto fw-bold">{journey.user.name}</p>
+                                        {/* <span className='pe-1'><FaRegHeart /></span> */}
+                                        {journey.books == "true" ? (
+                                            <div>
+                                                <span className='pe-1 ms-auto cursor-pointer' onClick={(e) => {
+                                                    Swal.fire({
+                                                        title: 'Are you sure you want to edit this journey?',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Edit',
+                                                        denyButtonText: `Cancel`,
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            Swal.fire({
+                                                                icon: "success",
+                                                                title: "Success!",
+                                                                showConfirmButton: true,
+                                                                onClick: handleEditJourney(e, journey.id),
+                                                            });
+                                                        } else if (result.isDenied) {
+                                                            Swal.fire('Edit this Journey canceled', '', 'info')
+                                                        }
+                                                    })
+                                                }} ><FaRegEdit /></span>
+                                                <span className='pe-1 cursor-pointer' onClick={(e) => {
+                                                    Swal.fire({
+                                                        title: 'Are you sure you want to delete this journey?',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Delete',
+                                                        denyButtonText: `Cancel`,
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            Swal.fire({
+                                                                icon: "success",
+                                                                title: "Success!",
+                                                                showConfirmButton: true,
+                                                                onClick: handleDeleteJourney(e, journey.id),
+                                                            });
+                                                        } else if (result.isDenied) {
+                                                            Swal.fire('Journey doesnt get deleted', '', 'info')
+                                                        }
+                                                    })
+                                                }}><FaTrashAlt /></span>
+                                                <span className='pe-1 cursor-pointer' onClick={(e) => {
+                                                    Swal.fire({
+                                                        title: 'Do you want to unbookmark this journey?',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Save',
+                                                        denyButtonText: `Don't save`,
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            Swal.fire({
+                                                                icon: "success",
+                                                                title: "Please wait",
+                                                                showConfirmButton: true,
+                                                                onClick: handleDelete(e, journey.id),
+                                                            });
+                                                        } else if (result.isDenied) {
+                                                            Swal.fire('Journey are not saved', '', 'info')
+                                                        }
+                                                    })
+                                                }}><FaBookmark /></span>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <span className='pe-1 ms-auto cursor-pointer' onClick={(e) => {
+                                                    Swal.fire({
+                                                        title: 'Are you sure you want to edit this journey?',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Edit',
+                                                        denyButtonText: `Cancel`,
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            Swal.fire({
+                                                                icon: "success",
+                                                                title: "Success!",
+                                                                showConfirmButton: true,
+                                                                onClick: handleEditJourney(e, journey.id),
+                                                            });
+                                                        } else if (result.isDenied) {
+                                                            Swal.fire('Edit this Journey canceled', '', 'info')
+                                                        }
+                                                    })
+                                                }} ><FaRegEdit /></span>
+                                                <span className='pe-1 cursor-pointer' onClick={(e) => {
+                                                    Swal.fire({
+                                                        title: 'Are you sure you want to delete this journey?',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Delete',
+                                                        denyButtonText: `Cancel`,
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            Swal.fire({
+                                                                icon: "success",
+                                                                title: "Success!",
+                                                                showConfirmButton: true,
+                                                                onClick: handleDeleteJourney(e, journey.id),
+                                                            });
+                                                        } else if (result.isDenied) {
+                                                            Swal.fire('Journey doesnt get deleted', '', 'info')
+                                                        }
+                                                    })
+                                                }}><FaTrashAlt /></span>
+                                                <span className='pe-1 cursor-pointer' onClick={(e) => {
+                                                    Swal.fire({
+                                                        title: 'Do you want to save this journey?',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Save',
+                                                        denyButtonText: `Don't save`,
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            Swal.fire({
+                                                                icon: "success",
+                                                                title: "Success!",
+                                                                showConfirmButton: true,
+                                                                onClick: handleOnBookmark(e, journey.id),
+                                                            });
+                                                        } else if (result.isDenied) {
+                                                            Swal.fire('Journey are not saved', '', 'info')
+                                                        }
+                                                    })
+                                                }}><FaRegBookmark /></span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/*  */}
+                                    <h6 className="card-title cursor-pointer"
+                                        style={{ fontSize: "14px" }}
+                                        onClick={() => { navigate(`/DetailJourney/${journey?.id}`) }}
+                                        key={index}>{journey?.title.slice(0, 30)} ...</h6>
+                                    <p
+                                        className="text-muted"
+                                        style={{ fontSize: "11px" }}
+                                    >
+                                        {moment(journey.created_at).format(
+                                            "dddd, DD MMMM YYYY"
+                                        )}
+                                    </p>
+                                    <p className="card-text cursor-pointer pb-4"
+                                        style={{ fontSize: "12px" }}
+                                        onClick={() => { navigate(`/DetailJourney/${journey?.id}`) }}
+                                        key={index}>{journey?.description.slice(0, 40)}... <span className='fw-bold text-primary'>Read more</span></p>
                                 </div>
-                                {/*  */}
-                                <h6 className="card-title cursor-pointer"
-                                    style={{ fontSize: "14px" }}
-                                    onClick={() => { navigate(`/DetailJourney/${journey?.id}`) }}
-                                    key={index}>{journey?.title.slice(0, 30)} ...</h6>
-                                <p
-                                    className="text-muted"
-                                    style={{ fontSize: "11px" }}
-                                >
-                                    {moment(journey.created_at).format(
-                                        "dddd, DD MMMM YYYY"
-                                    )}
-                                </p>
-                                <p className="card-text cursor-pointer pb-4"
-                                    style={{ fontSize: "12px" }}
-                                    onClick={() => { navigate(`/DetailJourney/${journey?.id}`) }}
-                                    key={index}>{journey?.description.slice(0, 40)}... <span className='fw-bold text-primary'>Read more</span></p>
                             </div>
                         </div>
-                    </div>
-                )
-                )}
-            </div>
+                    )
+                    )}
+                </div>
+            ) : (
+                <Blank />
+            )}
         </div >
     )
 }
